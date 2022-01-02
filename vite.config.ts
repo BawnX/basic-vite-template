@@ -1,7 +1,7 @@
 import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import Pages from 'vite-plugin-pages'
-import Layouts from 'vite-plugin-vue-layouts'
+import {VitePWA} from "vite-plugin-pwa";
 import AutoImport from 'unplugin-auto-import/vite'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
@@ -27,8 +27,8 @@ export default defineConfig({
         }),
         Pages({
             extensions: ['vue', 'md'],
+            pagesDir: 'src/pages',
         }),
-        Layouts(),
         AutoImport({
             imports: [
                 'vue',
@@ -66,9 +66,7 @@ export default defineConfig({
             headEnabled: true,
             markdownItSetup(md) {
                 // https://prismjs.com/
-                // @ts-expect-error types mismatch
                 md.use(Prism)
-                // @ts-expect-error types mismatch
                 md.use(LinkAttributes, {
                     pattern: /^https?:\/\//,
                     attrs: {
@@ -78,7 +76,42 @@ export default defineConfig({
                 })
             },
         }),
+        VitePWA({
+            registerType: 'autoUpdate',
+            includeAssets: ['favicon.svg', 'robots.txt', 'safari-pinned-tab.svg'],
+            manifest: {
+                name: 'Vitesse',
+                short_name: 'Vitesse',
+                theme_color: '#ffffff',
+                icons: [
+                    {
+                        src: '/pwa-192x192.png',
+                        sizes: '192x192',
+                        type: 'image/png',
+                    },
+                    {
+                        src: '/pwa-512x512.png',
+                        sizes: '512x512',
+                        type: 'image/png',
+                    },
+                    {
+                        src: '/pwa-512x512.png',
+                        sizes: '512x512',
+                        type: 'image/png',
+                        purpose: 'any maskable',
+                    },
+                ],
+            },
+        }),
     ],
+
+    server: {
+        fs: {
+            strict: true,
+        },
+    },
+
+    // https://github.com/antfu/vite-ssg
     ssgOptions: {
         script: 'async',
         formatting: 'minify',
