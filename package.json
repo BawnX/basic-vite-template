@@ -2,7 +2,7 @@
   "name": "basic-vite",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite --open",
+    "dev": "vite --open --host",
     "build": "vite-ssg build",
     "preview": "vite preview",
     "preview-https": "serve dist",
